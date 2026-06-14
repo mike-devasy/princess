@@ -1120,12 +1120,6 @@ body::after {
   }
 }
 @media (max-width: 48.055625em) and (width < 23.4375em){
-  .hero__content {
-    gap: 6.25e-8rem;
-  }
-  .hero__content {
-    padding-bottom: 8.75rem;
-  }
   .hero__title {
     font-size: 1.5rem;
   }
@@ -1252,10 +1246,10 @@ body::after {
 }
 @media (width < 30em){
   .hero__content {
-    justify-content: center;
-    gap: 9.375rem;
-    width: 100%;
+    gap: 3.125rem;
     padding-top: 1.25rem;
+    justify-content: center;
+    width: 100%;
   }
 }
 @media (width < 23.4375em){
@@ -1306,14 +1300,6 @@ body::after {
     gap: clamp( 1.25rem , 1.01908866995rem  +  0.9852216749vw , 1.875rem );
   }
 }
-@media (max-width: 48.055625em) and (width >= 86.875em){
-  .hero__content {
-    gap: 12.5rem;
-  }
-  .hero__content {
-    padding-bottom: 2.5rem;
-  }
-}
 @media (max-width: 48.055625em) and (width >= 48em){
   .hero__title {
     font-size: 2.0625rem;
@@ -1325,6 +1311,11 @@ body::after {
   }
 }
 @media (width <= 48em) and (height >= 51.875em){
+  .wrapper {
+    --mobile-footer-overlap: 16.875rem;
+  }
+}
+@media (width <= 48em) and (height >= 55.625em){
   .wrapper {
     --mobile-footer-overlap: 21.875rem;
   }
@@ -1362,6 +1353,30 @@ body::after {
     font-size: clamp( 1rem , 0.90763546798125rem  +  0.39408867vw , 1.25rem );
   }
 }
+@media (min-width: 30.00125em) and (max-width: 48em) and (width >= 48em){
+  .hero__content {
+    gap: 12.5rem;
+  }
+  .hero__content {
+    padding-bottom: 2.5rem;
+  }
+}
+@media (min-width: 30.00125em) and (max-width: 48em) and (width >= 30em) and (width < 48em){
+  .hero__content {
+    gap: clamp( 6.25rem , -4.16666666666875rem  +  34.7222222222vw , 12.5rem );
+  }
+  .hero__content {
+    padding-bottom: clamp( 2.5rem , 12.5rem  +  -20.8333333333vw , 6.25rem );
+  }
+}
+@media (min-width: 30.00125em) and (max-width: 48em) and (width < 30em){
+  .hero__content {
+    gap: 6.25rem;
+  }
+  .hero__content {
+    padding-bottom: 6.25rem;
+  }
+}
 @media (max-width: 36.25em) and (width >= 23.4375em) and (width < 36.25em){
   .hero__flash {
     width: clamp( 21.25rem , 0.09908536585625rem  +  90.243902439vw , 32.8125rem );
@@ -1375,14 +1390,6 @@ body::after {
 @media (width >= 48em) and (width < 120em){
   .hero__flash {
     gap: clamp( 1.875rem , 1.45833333333125rem  +  0.8680555556vw , 2.5rem );
-  }
-}
-@media (max-width: 48.055625em) and (width >= 23.4375em) and (width < 86.875em){
-  .hero__content {
-    gap: clamp( 6.25e-8rem , -4.61822651539375rem  +  19.704433399vw , 12.5rem );
-  }
-  .hero__content {
-    padding-bottom: clamp( 2.5rem , 11.05911330049375rem  +  -9.8522167488vw , 8.75rem );
   }
 }
 @media (max-width: 48.055625em) and (width >= 23.4375em) and (width < 48em){

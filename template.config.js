@@ -21,7 +21,7 @@ export default {
   },
   git: {
     repo: `https://github.com/mike-devasy/princess.git`,
-    branch: `main`,
+    branch: `gh-pages`,
   },
   navpanel: {
     dev: true,

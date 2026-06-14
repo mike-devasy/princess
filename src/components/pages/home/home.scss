@@ -292,42 +292,25 @@ body {
 	.wrapper {
 		--mobile-footer-overlap: #{toRem(350)};
 	}
-		.hero__content{
-// padding-top: 30px;
-	}
-}
-	@media (width <= toEm(768)) and (height < toEm(830)) {
-	.wrapper {
-		--mobile-footer-overlap: #{toRem(190)};
-	}
-
+ 
 }
 @media (max-width: toEm($mobileSmall)) {
 	.hero {
-		// min-height: 777px;
-		&__container {
-			// min-height: 777px;
-		}
+	 
 
 		&__content {
 			justify-content: center;
 			gap: 150px;
 			width: 100%;
 			@include adaptiveValue("padding-bottom", 300, 240, 0);
-			// padding-bottom: 300px;
 			padding-top: 20px;
 		}
 
-		&__title {
-			// margin-inline: -18px;
-			// font-size: 38px;
-			// line-height: 1.18;
-		}
+	 
 
 		&__flash {
 			gap: 10px;
-			// width: 100%;
-			// margin-inline: -9px;
+		 
 		}
 	}
 
@@ -339,3 +322,10 @@ body {
 		}
 	}
 }
+	@media (width <= toEm(768)) and (height < toEm(830)) {
+	.wrapper {
+		--mobile-footer-overlap: #{toRem(190)};
+	}
+
+}
+

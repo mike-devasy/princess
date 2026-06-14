@@ -1246,7 +1246,7 @@ body::after {
 }
 @media (width < 30em){
   .hero__content {
-    gap: 3.125rem;
+    gap: 9.375rem;
     padding-top: 1.25rem;
     justify-content: center;
     width: 100%;

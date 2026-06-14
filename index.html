@@ -5,8 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="assets/img/favicon.ico">
 		<title>Princess</title>
-		<script type="module" crossorigin="" src="/princess/js/index.min.js?v=1781453487775"></script>
-		<link rel="stylesheet" crossorigin="" href="/princess/css/index.min.css?v=1781453487775">
+		<script type="module" crossorigin="" src="./js/index.min.js?v=1781466604945"></script>
+		<link rel="stylesheet" crossorigin="" href="./css/index.min.css?v=1781466604945">
 	</head>
 	<body>
 		<div class="wrapper">
@@ -14,10 +14,14 @@
 				<div class="header__container">
 					<div class="header__logos" aria-label="Site logos">
 						<a class="header__brand" href="https://cuatrobet.com/" aria-label="Cuatrobet">
-							<img class="header__brand-image" src="/princess/assets/img/logo.webp" alt="Cuatrobet">
+							<picture>
+								<img class="header__brand-image" alt="Cuatrobet" src="./assets/img/logo.webp">
+							</picture>
 						</a>
 						<a class="header__brand header__brand--princess" href="/" aria-label="Starlight Princess">
-							<img class="header__brand-image" src="/princess/assets/img/logo-princess.png" alt="Starlight Princess">
+							<picture>
+								<img class="header__brand-image" alt="Starlight Princess" src="./assets/img/logo-princess.webp">
+							</picture>
 						</a>
 					</div>
 				</div>
@@ -27,10 +31,14 @@
 				<div class="page--home home">
 					<section class="hero" data-hero="" aria-labelledby="hero-title">
 						<picture class="hero__picture">
-							<source srcset="/princess/assets/img/hero/hero-image-mobile.png" media="(max-width: 768px)">
-							<source srcset="/princess/assets/img/hero/hero-image-tablet.png" media="(max-width: 992px)">
-							<source srcset="/princess/assets/img/hero/hero-image-laptop.png" media="(max-width: 1199.98px)">
-							<img class="hero__image" src="/princess/assets/img/hero/hero-image-desktop.png" alt="">
+							<source srcset="./assets/img/hero/hero-image-mobile.webp" media="(max-width: 768px)">
+							<source srcset="./assets/img/hero/hero-image-tablet.webp" media="(max-width: 992px)">
+							<source srcset="./assets/img/hero/hero-image-laptop.webp" media="(max-width: 1199.98px)">
+							<picture>
+								<source media="(max-width: 600px)" srcset="./assets/img/hero/hero-image-desktop-600.webp" type="image/webp">
+								<source media="(max-width: 1200px)" srcset="./assets/img/hero/hero-image-desktop-1200.webp" type="image/webp">
+								<img class="hero__image" alt="" src="./assets/img/hero/hero-image-desktop.webp">
+							</picture>
 						</picture>
 						<div class="hero__container">
 							<div class="hero__content">
@@ -41,15 +49,23 @@
 								<div class="hero__flash" data-flash-items="" aria-label="Choose day or night bonus">
 									<button class="hero__flash-item flash-item" type="button" data-flash-item="day" data-fls-popup-link="popup" aria-label="Choose day bonus">
 										<span class="flash-item__media">
-											<img class="flash-item__image flash-item__image--default" src="/princess/assets/img/flash-items/day.png" alt="" data-flash-image="default">
-											<img class="flash-item__image flash-item__image--active" src="/princess/assets/img/flash-items/day.png" alt="" data-flash-image="active">
+											<picture>
+												<img class="flash-item__image flash-item__image--default" alt="" data-flash-image="default" src="./assets/img/flash-items/day.webp">
+											</picture>
+											<picture>
+												<img class="flash-item__image flash-item__image--active" alt="" data-flash-image="active" src="./assets/img/flash-items/day.webp">
+											</picture>
 										</span>
 										<span class="flash-item__label">Day</span>
 									</button>
 									<button class="hero__flash-item flash-item" type="button" data-flash-item="night" data-fls-popup-link="popup" aria-label="Choose night bonus">
 										<span class="flash-item__media">
-											<img class="flash-item__image flash-item__image--default" src="/princess/assets/img/flash-items/night.png" alt="" data-flash-image="default">
-											<img class="flash-item__image flash-item__image--active" src="/princess/assets/img/flash-items/night.png" alt="" data-flash-image="active">
+											<picture>
+												<img class="flash-item__image flash-item__image--default" alt="" data-flash-image="default" src="./assets/img/flash-items/night.webp">
+											</picture>
+											<picture>
+												<img class="flash-item__image flash-item__image--active" alt="" data-flash-image="active" src="./assets/img/flash-items/night.webp">
+											</picture>
 										</span>
 										<span class="flash-item__label">Night</span>
 									</button>
@@ -67,11 +83,11 @@
 					<a class="footer__link" href="mailto:ayuda@cuatrobet.com">Contacto: ayuda@cuatrobet.com</a>
 					<div class="footer__licenses" aria-label="Licenses">
 						<span class="footer__licenses-label">Licenses:</span>
-						<img class="footer__license-icon" src="/princess/assets/img/footer/svgicons/responsible-gambling.svg" alt="">
-						<img class="footer__license-badge" src="/princess/assets/img/footer/svgicons/cga-license.svg" alt="">
+						<img class="footer__license-icon" src="./assets/img/footer/svgicons/responsible-gambling.svg" alt="">
+						<img class="footer__license-badge" src="./assets/img/footer/svgicons/cga-license.svg" alt="">
 					</div>
 					<a class="footer__age" href="https://cuatrobet.com/terms-and-conditions" aria-label="18 plus">
-						<img class="footer__age-icon" src="/princess/assets/img/footer/svgicons/age-18-plus.svg" alt="">
+						<img class="footer__age-icon" src="./assets/img/footer/svgicons/age-18-plus.svg" alt="">
 					</a>
 				</div>
 			</footer>
@@ -86,7 +102,9 @@
 								<div class="popup-bonus__content">
 									<p class="popup-bonus__eyebrow">¡Felicitaciones!</p>
 									<h2 class="popup-bonus__title">Por la victoria</h2>
-									<img class="popup-bonus__image" src="/princess/assets/img/popup/bonus-image.png" alt="">
+									<picture>
+										<img class="popup-bonus__image" alt="" src="./assets/img/popup/bonus-image.webp">
+									</picture>
 									<button class="popup-bonus__button" type="button" data-popup-bonus-button="">Obtener bono</button>
 								</div>
 							</section>
@@ -94,7 +112,7 @@
 								<div class="form__content">
 									<div class="form__shell-top">
 										<div class="form__shell-brand">
-											<img src="/princess/assets/img/logo-fav.svg" alt="" class="form__shell-brand-icon">
+											<img src="./assets/img/logo-fav.svg" alt="" class="form__shell-brand-icon">
 											<span class="form__shell-brand-text">Aprovechá</span>
 										</div>
 										<button class="form__shell-action form__shell-action--next" type="button" aria-label="Soporte">
@@ -109,7 +127,9 @@
 										</div>
 									</div>
 									<button class="bonus-card" aria-label="Welcome bonus">
-										<img src="/princess/assets/img/bono_3@1x.webp" srcset="/princess/assets/img/bono_3@1x.webp 1x, /princess/assets/img/bono_3@2x.webp 2x" alt="User" class="bonus-card__icon">
+										<picture>
+											<img srcset="./assets/img/bono_3@1x.webp 1x, ./assets/img/bono_3@2x.webp 2x" alt="User" class="bonus-card__icon" src="./assets/img/bono_3@1x.webp">
+										</picture>
 										<div class="bonus-card__body">
 											<p class="bonus-card__top">
 												<span class="bonus-card__badge">Bono</span>
@@ -133,40 +153,40 @@
 										<input type="hidden" name="defaultCurrency" value="ARS">
 										<label class="field field--phone">
 											<span class="field__phone-prefix" aria-hidden="true">
-												<img src="/princess/assets/img/svgicons/flag-argentina.svg" alt="" class="field__phone-flag">
+												<img src="./assets/img/svgicons/flag-argentina.svg" alt="" class="field__phone-flag">
 											</span>
 											<input type="tel" name="phone" placeholder="Número de teléfono" required inputmode="numeric">
 											<span class="field__hidden-placeholder" aria-hidden="true">Número de teléfono</span>
 											<span class="field__error">
-												<img src="/princess/assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
+												<img src="./assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
 												Ingresa un número de teléfono válido
 											</span>
 										</label>
 										<label class="field field--email">
-											<img src="/princess/assets/img/svgicons/mail.svg" alt="email" class="field__icon">
+											<img src="./assets/img/svgicons/mail.svg" alt="email" class="field__icon">
 											<input type="email" name="email" placeholder="Correo electrónico" required>
 											<span class="field__hidden-placeholder" aria-hidden="true">Correo electrónico</span>
 											<span class="field__error">
-												<img src="/princess/assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
+												<img src="./assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
 												Ingresa un correo electrónico válido
 											</span>
 										</label>
 										<label class="field field--password">
-											<img src="/princess/assets/img/svgicons/psw.svg" alt="password" class="field__icon">
+											<img src="./assets/img/svgicons/psw.svg" alt="password" class="field__icon">
 											<input type="password" name="password" placeholder="Contraseña" required minlength="8">
 											<span class="field__hidden-placeholder" aria-hidden="true">Contraseña</span>
 											<button class="field__toggle" type="button" aria-label="Show password">
-												<img src="/princess/assets/img/svgicons/eye.svg" alt="eye" class="field__eye">
+												<img src="./assets/img/svgicons/eye.svg" alt="eye" class="field__eye">
 											</button>
 											<span class="field__error">
-												<img src="/princess/assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
+												<img src="./assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
 												Debe tener 8 caracteres
 											</span>
 										</label>
 										<label class="check">
 											<input type="checkbox" name="isAdult" id="isAdult" required checked>
 											<span class="check__box" aria-hidden="true">
-												<img src="/princess/assets/img/svgicons/check.svg" alt="" class="check__icon">
+												<img src="./assets/img/svgicons/check.svg" alt="" class="check__icon">
 											</span>
 											<span class="check__text">
 												<span>Soy mayor de 18 años y acepto</span>
@@ -174,7 +194,7 @@
 													<strong>el contrato de oferta para la moneda elegida</strong>
 												</a>
 												<span class="field__error">
-													<img src="/princess/assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
+													<img src="./assets/img/svgicons/error.svg" alt="error" class="field__error-icon">
 													Debes ser mayor de 18 años
 												</span>
 											</span>

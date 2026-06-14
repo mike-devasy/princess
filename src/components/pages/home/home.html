@@ -1,0 +1,74 @@
+<!-- @format -->
+
+<script type="module" src="@components/pages/home/home.js"></script>
+<link rel="stylesheet" href="@components/pages/home/home.scss" />
+
+<div class="page--home home">
+	<section class="hero" data-hero aria-labelledby="hero-title">
+		<picture class="hero__picture">
+			<source srcset="@img/hero/hero-image-mobile.png" media="(max-width: 768px)" />
+			<source srcset="@img/hero/hero-image-tablet.png" media="(max-width: 992px)" />
+			<source srcset="@img/hero/hero-image-laptop.png" media="(max-width: 1199.98px)" />
+			<img class="hero__image" src="@img/hero/hero-image-desktop.png" alt="" />
+		</picture>
+
+		<div class="hero__container">
+			<div class="hero__content">
+				<h1 class="hero__title" id="hero-title">
+					<span>Descubr&iacute; d&oacute;nde</span>
+					<span>est&aacute; el superbono</span>
+				</h1>
+
+				<div class="hero__flash" data-flash-items aria-label="Choose day or night bonus">
+					<button
+						class="hero__flash-item flash-item"
+						type="button"
+						data-flash-item="day"
+						data-fls-popup-link="popup"
+						aria-label="Choose day bonus"
+					>
+						<span class="flash-item__media">
+							<img
+								class="flash-item__image flash-item__image--default"
+								src="@img/flash-items/day.png"
+								alt=""
+								data-flash-image="default"
+							/>
+							<img
+								class="flash-item__image flash-item__image--active"
+								src="@img/flash-items/day-active.png"
+								alt=""
+								data-flash-image="active"
+							/>
+						</span>
+						<span class="flash-item__label">Day</span>
+					</button>
+
+					<button
+						class="hero__flash-item flash-item"
+						type="button"
+						data-flash-item="night"
+						data-fls-popup-link="popup"
+						aria-label="Choose night bonus"
+					>
+						<span class="flash-item__media">
+							<img
+								class="flash-item__image flash-item__image--default"
+								src="@img/flash-items/night.png"
+								alt=""
+								data-flash-image="default"
+							/>
+							<img
+								class="flash-item__image flash-item__image--active"
+								src="@img/flash-items/night-active.png"
+								alt=""
+								data-flash-image="active"
+							/>
+						</span>
+						<span class="flash-item__label">Night</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

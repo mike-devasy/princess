@@ -472,23 +472,35 @@ body::after {
   min-height: 100dvh;
 }
 
-.popup-bonus {
+.popup-bonus,
+.form {
   z-index: 5;
   position: relative;
   display: grid;
-  place-items: center;
-  width: min(100%, 32.5rem);
-  padding-inline: 0.9375rem;
+  justify-content: center;
+  align-items: center;
+  width: min(100%, 34.75rem);
+  max-width: 34.75rem;
+  transition: transform 0.3s;
+}
+
+.popup-bonus__content,
+.form__content {
+  width: 100%;
+  max-width: 34.75rem;
+  padding-block: 2.1875rem;
+  padding-inline: 4.0625rem;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, #223 0%, #112 100%);
+}
+
+.popup-bonus {
   color: var(--secondary);
 }
 .popup-bonus__content {
   position: relative;
   display: grid;
   justify-items: center;
-  width: 100%;
-  padding: 2.8125rem 3rem 2.375rem;
-  border-radius: 1.125rem;
-  background: linear-gradient(135deg, #223 0%, #112 100%);
   box-shadow: var(--shadow-soft);
   text-align: center;
   overflow: hidden;
@@ -551,22 +563,6 @@ body::after {
   display: none;
 }
 
-.form {
-  z-index: 5;
-  position: relative;
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s;
-}
-.form__content {
-  border-radius: 2rem;
-  background: linear-gradient(135deg, #223 0%, #112 100%);
-  padding-block: 2.1875rem;
-  padding-inline: 4.0625rem;
-  max-width: 34.75rem;
-  width: 100%;
-}
 .form__shell-top {
   position: relative;
   display: flex;
@@ -1023,6 +1019,7 @@ body::after {
     min-height: 45rem;
     background-position-y: 50%;
   }
+  .popup-bonus,
   .form {
     transform-origin: top center;
     transform: translateY(4%) scale(0.8);
@@ -1202,6 +1199,7 @@ body::after {
   }
 }
 @media (max-width: 37.5em){
+  .popup-bonus,
   .form {
     transform: scale(1);
     transform-origin: center;
@@ -1210,6 +1208,7 @@ body::after {
   }
 }
 @media (max-width: 37.5em) and (width < 23.4375em){
+  .popup-bonus__content,
   .form__content {
     padding-inline: 1.25rem;
   }
@@ -1233,15 +1232,7 @@ body::after {
   .popup__content {
     padding-inline: 0rem;
   }
-  .popup-bonus {
-    padding-inline: 0;
-  }
-  .popup-bonus__content {
-    min-height: 100svh;
-    justify-content: center;
-    border-radius: 0;
-    padding-inline: 1.5rem;
-  }
+  .popup-bonus__content,
   .form__content {
     border-radius: 0;
   }
@@ -1355,6 +1346,7 @@ body::after {
   }
 }
 @media (max-width: 37.5em) and (width >= 86.875em){
+  .popup-bonus__content,
   .form__content {
     padding-inline: 4.0625rem;
   }
@@ -1418,6 +1410,7 @@ body::after {
   }
 }
 @media (max-width: 37.5em) and (width >= 23.4375em) and (width < 86.875em){
+  .popup-bonus__content,
   .form__content {
     padding-inline: clamp( 1.25rem , 0.21089901478125rem  +  4.4334975369vw , 4.0625rem );
   }

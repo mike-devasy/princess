@@ -302,7 +302,10 @@ var Popup = class {
 		else focusable[0].focus();
 	}
 };
-document.querySelector("[data-fls-popup]") && window.addEventListener("load", () => window.flsPopup = new Popup({}));
+document.querySelector("[data-fls-popup]") && window.addEventListener("load", () => window.flsPopup = new Popup({ hashSettings: {
+	location: false,
+	goHash: false
+} }));
 //#endregion
 //#region src/components/pages/home/password-toggle.js
 function initPasswordToggle() {
@@ -511,7 +514,8 @@ var initFlashPreview = () => {
 	];
 	let timerId = null;
 	let sequenceIndex = 0;
-	let isStopped = false;
+	let isPaused = false;
+	const pauseReasons = /* @__PURE__ */ new Set();
 	const clearActive = () => {
 		items.forEach((item) => item.classList.remove(activeClass));
 	};
@@ -520,34 +524,68 @@ var initFlashPreview = () => {
 		if (typeof itemIndex === "number") items[itemIndex]?.classList.add(activeClass);
 	};
 	const getDelay = (itemIndex) => typeof itemIndex === "number" ? activeDuration : idleDuration;
+	const clearTimer = () => {
+		if (timerId === null) return;
+		window.clearTimeout(timerId);
+		timerId = null;
+	};
+	const queueNext = (delay = 0) => {
+		if (isPaused || timerId !== null) return;
+		timerId = window.setTimeout(scheduleNext, delay);
+	};
 	const scheduleNext = () => {
-		if (isStopped) return;
+		timerId = null;
+		if (isPaused) return;
 		const itemIndex = sequence[sequenceIndex];
 		setActiveItem(itemIndex);
 		sequenceIndex = (sequenceIndex + 1) % sequence.length;
-		timerId = window.setTimeout(scheduleNext, getDelay(itemIndex));
+		queueNext(getDelay(itemIndex));
 	};
-	const stopPreview = () => {
-		if (isStopped) return;
-		isStopped = true;
-		window.clearTimeout(timerId);
-		timerId = null;
+	const pausePreview = (reason) => {
+		pauseReasons.add(reason);
+		if (isPaused) return;
+		isPaused = true;
+		clearTimer();
 		clearActive();
 	};
-	const handleKeydown = (event) => {
-		if (event.key === "Enter" || event.key === " ") stopPreview();
+	const resumePreview = (reason) => {
+		pauseReasons.delete(reason);
+		if (pauseReasons.size > 0 || !isPaused) return;
+		isPaused = false;
+		queueNext(idleDuration);
 	};
 	items.forEach((item) => {
-		item.addEventListener("pointerenter", stopPreview, { once: true });
-		item.addEventListener("focusin", stopPreview, { once: true });
-		item.addEventListener("pointerdown", stopPreview, { once: true });
-		item.addEventListener("click", stopPreview, { once: true });
-		item.addEventListener("keydown", handleKeydown, { once: true });
+		item.addEventListener("pointerenter", () => pausePreview("pointer"));
+		item.addEventListener("pointerleave", () => resumePreview("pointer"));
+		item.addEventListener("focusin", () => pausePreview("focus"));
+		item.addEventListener("focusout", () => resumePreview("focus"));
 	});
+	window.addEventListener("beforeunload", clearTimer, { once: true });
 	scheduleNext();
+};
+var initPopupFlow = () => {
+	const flow = document.querySelector("[data-popup-flow]");
+	if (!flow || flow.dataset.popupFlowInitialized === "true") return;
+	const bonus = flow.querySelector("[data-popup-bonus]");
+	const form = flow.querySelector("[data-popup-form]");
+	const bonusButton = flow.querySelector("[data-popup-bonus-button]");
+	if (!bonus || !form || !bonusButton) return;
+	flow.dataset.popupFlowInitialized = "true";
+	const setStep = (step) => {
+		const isFormStep = step === "form";
+		flow.dataset.step = step;
+		bonus.hidden = isFormStep;
+		form.hidden = !isFormStep;
+		if (isFormStep) form.querySelector("input:not([type='hidden']), button, a")?.focus({ preventScroll: true });
+	};
+	bonusButton.addEventListener("click", () => setStep("form"));
+	document.addEventListener("afterPopupOpen", (event) => {
+		if (event.detail?.popup?.targetOpen?.selector === "popup") setStep("bonus");
+	});
 };
 document.addEventListener("DOMContentLoaded", () => {
 	initFlashPreview();
+	initPopupFlow();
 	initPasswordToggle();
 	initFormValidation();
 	initPhoneMask();

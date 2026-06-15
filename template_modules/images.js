@@ -76,45 +76,100 @@ export const imagePlugins = [
 						let content = fs.readFileSync(file, 'utf-8')
 						if (file.endsWith('.html') || file.endsWith('.js')) {
 							const attrIgnore = templateConfig.images.optimize.attrignore
-							let ignoreSizes = false;
+							// let ignoreSizes = false;
 							// Обробка зображень які вказані в srcset тегів SOURCE
 							content = await replaceAsync(content, /<source\s[^>]*srcset=["']([^"']+\.(jpg|jpeg|avif|png|gif|webp))["'][^>]*>/gi, async (data, url) => {
 								return await returnUrl(data, url)
 							})
 							// Обробка зображень які вказані в src тегів IMG
-							content = await replaceAsync(content, new RegExp(`<img(?![^>]*\\s${attrIgnore})[^>]*>`, 'gi'), async (data) => {
-								const regex = /([\w-]+)\s*=\s*"([^"]*)"/g
-								let match, imagePath, sizesAttr
-								let attributes = ``
-								while ((match = regex.exec(data)) !== null) {
-									const [key, value] = [match[1], match[2]]
-									if (key === 'data-fls-image-sizes-ignore') {
-										ignoreSizes = true
-									} else if (key === 'data-fls-image-sizes') {
-										sizesAttr = value
-									} else if (key === 'src') {
-										imagePath = value
-									} else {
-										attributes += `${key}="${value}" `
-									}
-								}
-								if (!imagePath) return data;
+ 
+							content = await replaceAsync(
+                content,
+                new RegExp(`<img(?![^>]*\\s${attrIgnore})[^>]*>`, "gi"),
+                async (data) => {
+                  const regex = /([\w-]+)\s*=\s*"([^"]*)"/g
 
-								sizesAttr = !ignoreSizes ? sizesAttr ? sizesAttr.split(',') : templateConfig.images.optimize.sizes : []
-								const dpi = templateConfig.images.optimize.dpi
+                  let match
+                  let imagePath
+                  let sizesAttr
+                  let ignoreSizes = false
+                  let attributes = ``
 
-								imagePath = imagePath.startsWith('./') ? imagePath.replace('./', '/') : imagePath
-								const fullImagePath = `src${imagePath}`;
+                  while ((match = regex.exec(data)) !== null) {
+                    const [key, value] = [match[1], match[2]]
 
-								if (fs.existsSync(fullImagePath)) {
-									const extType = imagePath.split('.').pop().toLowerCase();
-									if (/^(png|webp|avif|jpe?g|gif|tiff|bmp|ico)$/i.test(extType)) {
-										const newHtmlCode = await imageResizeInit(fullImagePath, sizesAttr, dpi, extType, attributes, file.endsWith('.html') ? 'html' : 'js')
-										return templateConfig.images.optimize.edithtml ? newHtmlCode : data;
-									}
-								}
-								return data;
-							})
+                    if (key === "data-fls-image-sizes-ignore") {
+                      ignoreSizes = true
+                    } else if (key === "data-fls-image-sizes") {
+                      sizesAttr = value
+                    } else if (key === "src") {
+                      imagePath = value
+                    } else {
+                      attributes += `${key}="${value}" `
+                    }
+                  }
+
+                  if (!imagePath) return data
+
+                  const sizesIgnore =
+                    templateConfig.images.optimize.sizesignore || []
+
+                  const normalizedImagePath = imagePath
+                    .replace(/\\/g, "/")
+                    .replace(/^\.?\//, "")
+                    .replace(/^assets\/img\//, "")
+
+                  const isSizesIgnored = sizesIgnore.some((ignoredPath) => {
+                    const normalizedIgnoredPath = ignoredPath
+                      .replace(/\\/g, "/")
+                      .replace(/^\.?\//, "")
+                      .replace(/^assets\/img\//, "")
+
+                    return normalizedImagePath.endsWith(normalizedIgnoredPath)
+                  })
+
+                  if (isSizesIgnored) {
+                    ignoreSizes = true
+                  }
+
+                  sizesAttr = !ignoreSizes
+                    ? sizesAttr
+                      ? sizesAttr.split(",")
+                      : templateConfig.images.optimize.sizes
+                    : []
+
+                  const dpi = templateConfig.images.optimize.dpi
+
+                  imagePath = imagePath.startsWith("./")
+                    ? imagePath.replace("./", "/")
+                    : imagePath
+
+                  const fullImagePath = `src${imagePath}`
+
+                  if (fs.existsSync(fullImagePath)) {
+                    const extType = imagePath.split(".").pop().toLowerCase()
+
+                    if (
+                      /^(png|webp|avif|jpe?g|gif|tiff|bmp|ico)$/i.test(extType)
+                    ) {
+                      const newHtmlCode = await imageResizeInit(
+                        fullImagePath,
+                        sizesAttr,
+                        dpi,
+                        extType,
+                        attributes,
+                        file.endsWith(".html") ? "html" : "js",
+                      )
+
+                      return templateConfig.images.optimize.edithtml
+                        ? newHtmlCode
+                        : data
+                    }
+                  }
+
+                  return data
+                },
+              )
 							// Обробка зображень які вказані в href тегів A
 							content = await replaceAsync(content, /<a\s[^>]*href=["']([^"']+\.(jpg|jpeg|avif|png|gif|webp))["'][^>]*>/gi, async (data, url) => {
 								return await returnUrl(data, url)

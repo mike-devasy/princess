@@ -68,6 +68,7 @@ export default {
       enable: true,
       edithtml: true,
       sizes: [600, 1200],
+      sizesignore: ["hero/hero-image-desktop.png"],
       dpi: [],
       attrignore: "data-fls-image-ignore",
       modernformat: {

@@ -347,4 +347,9 @@ class Popup {
 }
 // Запускаємо
 document.querySelector('[data-fls-popup]') ?
-	window.addEventListener('load', () => window.flsPopup = new Popup({})) : null
+	window.addEventListener('load', () => window.flsPopup = new Popup({
+		hashSettings: {
+			location: false,
+			goHash: false,
+		},
+	})) : null

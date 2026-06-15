@@ -27,7 +27,6 @@ body {
 	color: var(--secondary);
 
 
-
 	&__picture {
 		position: absolute;
 		inset: 0;
@@ -48,8 +47,15 @@ body {
 		height: 100%;
 		object-fit: cover;
 		object-position: center top;
+ 
 	}
-
+	&__decor {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		overflow: hidden;
+		pointer-events: none;
+	}
 	&__container {
 		position: relative;
 		z-index: 2;
@@ -74,6 +80,20 @@ body {
 		flex-direction: column;
 		align-items: center;
 		gap: 140px;
+		@media (max-width: toEm(1440)){
+			  justify-content: center;
+		}
+ @media (max-width: toEm(480)){
+	 	 
+			@include adaptiveValue("padding-bottom", 300, 240, 0);
+			padding-top: 60px; 
+ 
+			justify-content: center;
+ 
+			width: 100%;
+	 
+		
+	}
  
 	}
 
@@ -102,11 +122,43 @@ body {
 	&__flash {
 		display: flex;
 		justify-content: center;
-		gap: 43px;
+		@include adaptiveValue("gap", 40, 30, 0, $maxWidth, 768);
 		width: 100%;
+		@media (width < toEm($mobileSmall)){
+		@include adaptiveValue("gap", 30, 20, 0);
+		}
 	}
 }
+.decor-hero {
+	&__left,
+	&__right {
+		position: absolute;
+		top: 0;
+		height: 100%;
+		pointer-events: none;
 
+		svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+		}
+	}
+
+	&__left {
+		left: 0;
+		width: min(32.92vw, toRem(632));
+	}
+
+	&__right {
+		right: 0;
+		width: min(31.15vw, toRem(598));
+	}
+ @media (max-width: toEm(920)){
+		 display: none; 
+	  
+ }
+}
 .flash-item {
 	position: relative;
 	display: grid;
@@ -188,25 +240,7 @@ body {
 	}
 }
 
- 
-
 @media (max-width: toEm(1440)) {
-	.hero {
-		&__container {
-		}
-
-		&__content {
-	justify-content: center;
-		}
-
-		&__title {
-		}
-
-		&__flash {
-			gap: 36px;
-		}
-	}
-
 	.flash-item {
 		flex-basis: 252px;
 
@@ -217,6 +251,7 @@ body {
 		}
 	}
 }
+
 
 @media (max-width: toEm(768.89)) {
 		.wrapper {
@@ -239,27 +274,29 @@ body {
 	}
 	
 	.hero {
-		// min-height: 777px;
+	&__image{ 
+				height: calc(100% + 40px);
+		transform: translateY(24px);
+	}
 
 		&::before,
 		&::after {
 			display: none;
 		}
+ 
+
+    
+
+
 
 		&__container {
 		 
-			// min-height: 777px;
  justify-content: center;
 			padding-bottom: 0;
 		}
-
-	 
-
 		&__content {
 			justify-content: space-around;
-			@include adaptiveValue("gap", 200, 0, 0);
-			@include adaptiveValue("padding-bottom", 40, 140, 0);
-//  padding-top: 50px;
+ 
 		}
 
 		&__title {
@@ -271,7 +308,7 @@ body {
 			width: min(100vw, 525px);
 		}
 	}
-
+ 
 	.flash-item {
 		flex: 1 1 0;
 		min-width: 0;
@@ -283,6 +320,14 @@ body {
 		}
 	}
 }
+@media (min-width: toEm(480.02)) and (max-width: toEm(768)) {
+	.hero {
+		&__content {
+			gap: 0px;
+			@include adaptiveValue("padding-bottom", 80, 180, 0, 768, 480);
+		}
+	}
+}
 @media (max-width: toEm(580)){
 	  .hero__flash{
 		@include adaptiveValue("width", 525, 340, 0, 580, 375);
@@ -290,30 +335,17 @@ body {
 }
 @media (width <= toEm(768)) and (height >= toEm(830)) {
 	.wrapper {
-		--mobile-footer-overlap: #{toRem(350)};
+		--mobile-footer-overlap: #{toRem(270)};
 	}
  
 }
-@media (max-width: toEm($mobileSmall)) {
-	.hero {
-	 
-
-		&__content {
-			justify-content: center;
-			gap: 150px;
-			width: 100%;
-			@include adaptiveValue("padding-bottom", 300, 240, 0);
-			padding-top: 20px;
-		}
-
-	 
-
-		&__flash {
-			gap: 10px;
-		 
-		}
+@media (width <= toEm(767)) and (height >= toEm(890)) {
+	.wrapper {
+		--mobile-footer-overlap: #{toRem(350)};
 	}
-
+}
+@media (max-width: toEm($mobileSmall)) {
+	
 	.flash-item {
 		&::before {
 			top: -38px;

@@ -1,4 +1,5 @@
 .footer {
+ 
 background-color: var(--bgColor);
 	color: rgba(255, 255, 255, 0.5);
  	position: relative;
@@ -7,7 +8,6 @@ background-color: var(--bgColor);
 		// Hero имеет высоту 777px.
 		// Поднимаем footer так, чтобы он начинался примерно на 553px.
 		margin-top: -224px;
-
 		// Заполняем тёмным фоном оставшуюся часть высокого экрана.
 		min-height: max(
 			256px,
@@ -19,9 +19,7 @@ background-color: var(--bgColor);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-
 		gap: 18px;
-		// max-width: none;
 		min-height: 52px;
 		padding-block: 13px;
 		font-size: 14px;
@@ -38,9 +36,6 @@ background-color: var(--bgColor);
 			align-items: flex-start;
 			justify-content: flex-start;
 			gap: toRem(20);
-
-			// Не задаём min-height контейнеру:
-			// высотой нижней области управляет сам .footer.
 			min-height: 0;
 			padding-block: toRem(16) toRem(24);
 			font-size: toRem(16);
@@ -106,19 +101,9 @@ background-color: var(--bgColor);
  
 
 	@media (max-width: toEm(768)) {
-		&__container {
-			// flex-direction: column;
-			// align-items: flex-start;
-			// gap: 20px;
-			// min-height: 256px;
-			// padding-block: 12px;
-			// font-size: 16px;
-		}
-
 		&__licenses {
 			gap: 10px;
 		}
-
 		&__license-icon {
 			width: 24px;
 			height: 24px;
@@ -127,7 +112,6 @@ background-color: var(--bgColor);
 		&__license-badge {
 			width: 38px;
 		}
-
 		&__age {
 			flex-basis: 24px;
 			width: 24px;
@@ -135,6 +119,4 @@ background-color: var(--bgColor);
 			font-size: 12px;
 		}
 	}
-
- 
 }

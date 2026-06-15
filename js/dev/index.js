@@ -494,7 +494,60 @@ function initPhoneMask() {
 }
 //#endregion
 //#region src/components/pages/home/home.js
+var initFlashPreview = () => {
+	const container = document.querySelector("[data-flash-items]");
+	if (!container || container.dataset.flashPreviewInitialized === "true") return;
+	const items = [container.querySelector("[data-flash-item=\"day\"]"), container.querySelector("[data-flash-item=\"night\"]")].filter(Boolean);
+	if (items.length < 2) return;
+	container.dataset.flashPreviewInitialized = "true";
+	const activeClass = "is-active";
+	const activeDuration = 900;
+	const idleDuration = 360;
+	const sequence = [
+		0,
+		null,
+		1,
+		null
+	];
+	let timerId = null;
+	let sequenceIndex = 0;
+	let isStopped = false;
+	const clearActive = () => {
+		items.forEach((item) => item.classList.remove(activeClass));
+	};
+	const setActiveItem = (itemIndex) => {
+		clearActive();
+		if (typeof itemIndex === "number") items[itemIndex]?.classList.add(activeClass);
+	};
+	const getDelay = (itemIndex) => typeof itemIndex === "number" ? activeDuration : idleDuration;
+	const scheduleNext = () => {
+		if (isStopped) return;
+		const itemIndex = sequence[sequenceIndex];
+		setActiveItem(itemIndex);
+		sequenceIndex = (sequenceIndex + 1) % sequence.length;
+		timerId = window.setTimeout(scheduleNext, getDelay(itemIndex));
+	};
+	const stopPreview = () => {
+		if (isStopped) return;
+		isStopped = true;
+		window.clearTimeout(timerId);
+		timerId = null;
+		clearActive();
+	};
+	const handleKeydown = (event) => {
+		if (event.key === "Enter" || event.key === " ") stopPreview();
+	};
+	items.forEach((item) => {
+		item.addEventListener("pointerenter", stopPreview, { once: true });
+		item.addEventListener("focusin", stopPreview, { once: true });
+		item.addEventListener("pointerdown", stopPreview, { once: true });
+		item.addEventListener("click", stopPreview, { once: true });
+		item.addEventListener("keydown", handleKeydown, { once: true });
+	});
+	scheduleNext();
+};
 document.addEventListener("DOMContentLoaded", () => {
+	initFlashPreview();
 	initPasswordToggle();
 	initFormValidation();
 	initPhoneMask();

@@ -834,7 +834,6 @@ body::after {
 
 .field:not(.field--phone) input:not(:placeholder-shown) ~ .field__hidden-placeholder {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .field__toggle {

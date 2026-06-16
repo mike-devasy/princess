@@ -385,7 +385,6 @@ async function handleFormSubmit(form) {
 		setSubmitButtonState(submitButton, false);
 	}
 }
-var AR_PHONE_PREFIX = `+54 `;
 var getPhoneLocalDigits = (phoneNumber = "") => {
 	const digits = String(phoneNumber).replace(/\D/g, "");
 	return digits.startsWith("54") ? digits.slice(2) : digits;
@@ -473,54 +472,66 @@ function initFormValidation() {
 }
 //#endregion
 //#region src/components/pages/home/phone-select.js
+/** @format */
+var PHONE_PREFIX = `+54`;
+var PHONE_MASK_START = `${PHONE_PREFIX} (`;
+var formatArPhone = (value = "") => {
+	const digits = getPhoneLocalDigits(value).slice(0, 10);
+	if (!digits.length) return PHONE_PREFIX;
+	const areaCode = digits.slice(0, 3);
+	const firstPart = digits.slice(3, 6);
+	const secondPart = digits.slice(6, 10);
+	let formatted = `${PHONE_MASK_START}${areaCode}`;
+	if (areaCode.length === 3) formatted += ")";
+	if (firstPart.length) formatted += ` ${firstPart}`;
+	if (secondPart.length) formatted += ` - ${secondPart}`;
+	return formatted;
+};
 function initPhoneMask() {
 	const phoneInput = document.querySelector("input[name=\"phone\"]");
-	if (!phoneInput) return;
-	if (typeof window.IMask !== "function") return;
-	const mask = window.IMask(phoneInput, { mask: "+{54} (000) 000 - 0000" });
-	const getPrefixLength = () => AR_PHONE_PREFIX.length;
-	const clampCaretToPrefix = () => {
-		const prefixLength = getPrefixLength();
+	if (!phoneInput || phoneInput.dataset.phoneMaskInitialized === "true") return;
+	phoneInput.dataset.phoneMaskInitialized = "true";
+	phoneInput.value = PHONE_PREFIX;
+	phoneInput.placeholder = "";
+	phoneInput.inputMode = "numeric";
+	phoneInput.autocomplete = "tel";
+	const prefixLength = PHONE_PREFIX.length;
+	const moveCaretToEnd = () => {
 		window.requestAnimationFrame(() => {
-			const selectionStart = phoneInput.selectionStart ?? prefixLength;
-			const selectionEnd = phoneInput.selectionEnd ?? prefixLength;
-			if (selectionStart < prefixLength || selectionEnd < prefixLength) phoneInput.setSelectionRange(prefixLength, prefixLength);
+			const position = phoneInput.value.length;
+			phoneInput.setSelectionRange(position, position);
 		});
 	};
-	const hasLocalDigits = () => getPhoneLocalDigits(mask.value).length > 0;
-	const ensurePrefixWhileFocused = () => {
-		if (document.activeElement !== phoneInput) return;
-		if (!hasLocalDigits()) mask.value = AR_PHONE_PREFIX;
-		clampCaretToPrefix();
+	const moveCaretAfterPrefix = () => {
+		window.requestAnimationFrame(() => {
+			const position = Math.max(prefixLength, phoneInput.value.length);
+			phoneInput.setSelectionRange(position, position);
+		});
 	};
-	phoneInput.addEventListener("focus", () => {
-		if (!mask.value.trim()) {
-			mask.value = AR_PHONE_PREFIX;
-			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-		clampCaretToPrefix();
+	phoneInput.addEventListener("focus", moveCaretAfterPrefix);
+	phoneInput.addEventListener("click", () => {
+		if ((phoneInput.selectionStart ?? 0) < prefixLength) moveCaretAfterPrefix();
 	});
-	phoneInput.addEventListener("blur", () => {
-		if (!hasLocalDigits()) {
-			mask.value = "";
-			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-	});
-	phoneInput.addEventListener("click", clampCaretToPrefix);
 	phoneInput.addEventListener("input", () => {
-		ensurePrefixWhileFocused();
-	});
-	phoneInput.addEventListener("keyup", () => {
-		ensurePrefixWhileFocused();
+		const localDigits = getPhoneLocalDigits(phoneInput.value);
+		phoneInput.value = formatArPhone(localDigits);
+		if (localDigits.length) moveCaretToEnd();
+		else moveCaretAfterPrefix();
 	});
 	phoneInput.addEventListener("keydown", (event) => {
-		const prefixLength = getPrefixLength();
 		const selectionStart = phoneInput.selectionStart ?? prefixLength;
-		const selectionEnd = phoneInput.selectionEnd ?? prefixLength;
-		const isPrefixSelected = selectionStart < prefixLength;
-		if (event.key === "Backspace" && selectionStart <= prefixLength && selectionEnd <= prefixLength || event.key === "Delete" && isPrefixSelected) {
+		const selectionEnd = phoneInput.selectionEnd ?? selectionStart;
+		const localDigits = getPhoneLocalDigits(phoneInput.value);
+		if (event.key === "Backspace" && selectionStart <= prefixLength && selectionEnd <= prefixLength || event.key === "Delete" && selectionStart < prefixLength) {
 			event.preventDefault();
-			phoneInput.setSelectionRange(prefixLength, prefixLength);
+			moveCaretAfterPrefix();
+			return;
+		}
+		if ((event.key === "Backspace" || event.key === "Delete") && localDigits.length <= 1) {
+			event.preventDefault();
+			phoneInput.value = PHONE_PREFIX;
+			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
+			moveCaretAfterPrefix();
 		}
 	});
 }

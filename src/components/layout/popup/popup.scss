@@ -527,7 +527,7 @@ display: grid;
 	flex: 1 1 auto;
 }
 
-.field input::placeholder {
+.field.field input::placeholder {
 	// color: rgba(255, 255, 255, 0.94);
 }
 
@@ -583,7 +583,7 @@ display: grid;
 
 .field:not(.field--phone) input:not(:placeholder-shown) ~ .field__hidden-placeholder {
 	opacity: 1;
-	transform: translateY(0);
+	// transform: translateY(0);
 }
 
 .field__toggle {

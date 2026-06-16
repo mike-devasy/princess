@@ -385,7 +385,6 @@ async function handleFormSubmit(form) {
 		setSubmitButtonState(submitButton, false);
 	}
 }
-var AR_PHONE_PREFIX = `+54 `;
 var getPhoneLocalDigits = (phoneNumber = "") => {
 	const digits = String(phoneNumber).replace(/\D/g, "");
 	return digits.startsWith("54") ? digits.slice(2) : digits;
@@ -473,59 +472,137 @@ function initFormValidation() {
 }
 //#endregion
 //#region src/components/pages/home/phone-select.js
+/** @format */
+var PHONE_PREFIX = `+54`;
+var PHONE_MASK_START = `${PHONE_PREFIX} (`;
+var formatArPhone = (value = "") => {
+	const digits = getPhoneLocalDigits(value).slice(0, 10);
+	if (!digits.length) return PHONE_PREFIX;
+	const areaCode = digits.slice(0, 3);
+	const firstPart = digits.slice(3, 6);
+	const secondPart = digits.slice(6, 10);
+	let formatted = `${PHONE_MASK_START}${areaCode}`;
+	if (areaCode.length === 3) formatted += ")";
+	if (firstPart.length) formatted += ` ${firstPart}`;
+	if (secondPart.length) formatted += ` - ${secondPart}`;
+	return formatted;
+};
 function initPhoneMask() {
 	const phoneInput = document.querySelector("input[name=\"phone\"]");
-	if (!phoneInput) return;
-	if (typeof window.IMask !== "function") return;
-	const mask = window.IMask(phoneInput, { mask: "+{54} (000) 000 - 0000" });
-	const getPrefixLength = () => AR_PHONE_PREFIX.length;
-	const clampCaretToPrefix = () => {
-		const prefixLength = getPrefixLength();
+	if (!phoneInput || phoneInput.dataset.phoneMaskInitialized === "true") return;
+	phoneInput.dataset.phoneMaskInitialized = "true";
+	phoneInput.value = PHONE_PREFIX;
+	phoneInput.placeholder = "";
+	phoneInput.inputMode = "numeric";
+	phoneInput.autocomplete = "tel";
+	const prefixLength = PHONE_PREFIX.length;
+	const moveCaretToEnd = () => {
 		window.requestAnimationFrame(() => {
-			const selectionStart = phoneInput.selectionStart ?? prefixLength;
-			const selectionEnd = phoneInput.selectionEnd ?? prefixLength;
-			if (selectionStart < prefixLength || selectionEnd < prefixLength) phoneInput.setSelectionRange(prefixLength, prefixLength);
+			const position = phoneInput.value.length;
+			phoneInput.setSelectionRange(position, position);
 		});
 	};
-	const hasLocalDigits = () => getPhoneLocalDigits(mask.value).length > 0;
-	const ensurePrefixWhileFocused = () => {
-		if (document.activeElement !== phoneInput) return;
-		if (!hasLocalDigits()) mask.value = AR_PHONE_PREFIX;
-		clampCaretToPrefix();
+	const moveCaretAfterPrefix = () => {
+		window.requestAnimationFrame(() => {
+			const position = Math.max(prefixLength, phoneInput.value.length);
+			phoneInput.setSelectionRange(position, position);
+		});
 	};
-	phoneInput.addEventListener("focus", () => {
-		if (!mask.value.trim()) {
-			mask.value = AR_PHONE_PREFIX;
-			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-		clampCaretToPrefix();
+	phoneInput.addEventListener("focus", moveCaretAfterPrefix);
+	phoneInput.addEventListener("click", () => {
+		if ((phoneInput.selectionStart ?? 0) < prefixLength) moveCaretAfterPrefix();
 	});
-	phoneInput.addEventListener("blur", () => {
-		if (!hasLocalDigits()) {
-			mask.value = "";
-			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
-		}
-	});
-	phoneInput.addEventListener("click", clampCaretToPrefix);
 	phoneInput.addEventListener("input", () => {
-		ensurePrefixWhileFocused();
-	});
-	phoneInput.addEventListener("keyup", () => {
-		ensurePrefixWhileFocused();
+		const localDigits = getPhoneLocalDigits(phoneInput.value);
+		phoneInput.value = formatArPhone(localDigits);
+		if (localDigits.length) moveCaretToEnd();
+		else moveCaretAfterPrefix();
 	});
 	phoneInput.addEventListener("keydown", (event) => {
-		const prefixLength = getPrefixLength();
 		const selectionStart = phoneInput.selectionStart ?? prefixLength;
-		const selectionEnd = phoneInput.selectionEnd ?? prefixLength;
-		const isPrefixSelected = selectionStart < prefixLength;
-		if (event.key === "Backspace" && selectionStart <= prefixLength && selectionEnd <= prefixLength || event.key === "Delete" && isPrefixSelected) {
+		const selectionEnd = phoneInput.selectionEnd ?? selectionStart;
+		const localDigits = getPhoneLocalDigits(phoneInput.value);
+		if (event.key === "Backspace" && selectionStart <= prefixLength && selectionEnd <= prefixLength || event.key === "Delete" && selectionStart < prefixLength) {
 			event.preventDefault();
-			phoneInput.setSelectionRange(prefixLength, prefixLength);
+			moveCaretAfterPrefix();
+			return;
+		}
+		if ((event.key === "Backspace" || event.key === "Delete") && localDigits.length <= 1) {
+			event.preventDefault();
+			phoneInput.value = PHONE_PREFIX;
+			phoneInput.dispatchEvent(new Event("input", { bubbles: true }));
+			moveCaretAfterPrefix();
 		}
 	});
 }
 //#endregion
 //#region src/components/pages/home/home.js
+var initFlashPreview = () => {
+	const container = document.querySelector("[data-flash-items]");
+	if (!container || container.dataset.flashPreviewInitialized === "true") return;
+	const items = [container.querySelector("[data-flash-item=\"day\"]"), container.querySelector("[data-flash-item=\"night\"]")].filter(Boolean);
+	if (items.length < 2) return;
+	container.dataset.flashPreviewInitialized = "true";
+	const activeClass = "is-active";
+	const activeDuration = 900;
+	const idleDuration = 360;
+	const sequence = [
+		0,
+		null,
+		1,
+		null
+	];
+	let timerId = null;
+	let sequenceIndex = 0;
+	let isPaused = false;
+	const pauseReasons = /* @__PURE__ */ new Set();
+	const clearActive = () => {
+		items.forEach((item) => item.classList.remove(activeClass));
+	};
+	const setActiveItem = (itemIndex) => {
+		clearActive();
+		if (typeof itemIndex === "number") items[itemIndex]?.classList.add(activeClass);
+	};
+	const getDelay = (itemIndex) => typeof itemIndex === "number" ? activeDuration : idleDuration;
+	const clearTimer = () => {
+		if (timerId === null) return;
+		window.clearTimeout(timerId);
+		timerId = null;
+	};
+	const queueNext = (delay = 0) => {
+		if (isPaused || timerId !== null) return;
+		timerId = window.setTimeout(scheduleNext, delay);
+	};
+	const scheduleNext = () => {
+		timerId = null;
+		if (isPaused) return;
+		const itemIndex = sequence[sequenceIndex];
+		setActiveItem(itemIndex);
+		sequenceIndex = (sequenceIndex + 1) % sequence.length;
+		queueNext(getDelay(itemIndex));
+	};
+	const pausePreview = (reason) => {
+		pauseReasons.add(reason);
+		if (isPaused) return;
+		isPaused = true;
+		clearTimer();
+		clearActive();
+	};
+	const resumePreview = (reason) => {
+		pauseReasons.delete(reason);
+		if (pauseReasons.size > 0 || !isPaused) return;
+		isPaused = false;
+		queueNext(idleDuration);
+	};
+	items.forEach((item) => {
+		item.addEventListener("pointerenter", () => pausePreview("pointer"));
+		item.addEventListener("pointerleave", () => resumePreview("pointer"));
+		item.addEventListener("focusin", () => pausePreview("focus"));
+		item.addEventListener("focusout", () => resumePreview("focus"));
+	});
+	window.addEventListener("beforeunload", clearTimer, { once: true });
+	scheduleNext();
+};
 var initPopupFlow = () => {
 	const flow = document.querySelector("[data-popup-flow]");
 	if (!flow || flow.dataset.popupFlowInitialized === "true") return;
@@ -547,6 +624,7 @@ var initPopupFlow = () => {
 	});
 };
 document.addEventListener("DOMContentLoaded", () => {
+	initFlashPreview();
 	initPopupFlow();
 	initPasswordToggle();
 	initFormValidation();
